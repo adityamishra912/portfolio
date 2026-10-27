@@ -24,3 +24,18 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.footer-fixed {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.footer-fixed.footer-visible {
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.footer-scroll-track {
+  height: 100vh;
+  visibility: hidden;
+}

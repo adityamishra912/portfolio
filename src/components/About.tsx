@@ -23,8 +23,74 @@ export default function About() {
             if (prefersReducedMotion) return;
 
             // Heading and eyebrow reveal
-            gsap.fromTo(
+            // gsap.fromTo(
+            //     ".about-heading",
+            //     {
+            //         y: 40,
+            //         autoAlpha: 0,
+            //     },
+            //     {
+            //         y: 0,
+            //         autoAlpha: 1,
+            //         stagger: 0.15,
+            //         ease: "none",
+            //         scrollTrigger: {
+            //             trigger: section,
+            //             start: "top 50%",
+            //             end: "top 25%",
+            //             scrub: 0,
+            //         },
+            //     }
+            // );
+
+            // Paragraph reveal
+            // gsap.fromTo(
+            //     ".about-copy",
+            //     {
+            //         y: 40,
+            //         autoAlpha: 0,
+            //     },
+            //     {
+            //         y: 0,
+            //         autoAlpha: 1,
+            //         stagger: 0.15,
+            //         ease: "none",
+            //         scrollTrigger: {
+            //             trigger: section,
+            //             start: "top 50%",
+            //             end: "top 30%",
+            //             scrub: 0,
+            //         },
+            //     }
+            // );
+
+            const tl = gsap.timeline({
+                scrollTrigger: {
+                    trigger: section,
+                    start: "top 50%",
+                    end: "top 25%",
+                    scrub: 0,
+                },
+            });
+
+            // Heading reveal
+            tl.fromTo(
                 ".about-heading",
+                {
+                    y: 40,
+                    autoAlpha: 0,
+                },
+                {
+                    y: 0,
+                    autoAlpha: 1,
+                    ease: "none",
+                    duration: 1,
+                }
+            );
+
+            // Paragraph reveal — starts after the heading
+            tl.fromTo(
+                ".about-copy",
                 {
                     y: 40,
                     autoAlpha: 0,
@@ -34,33 +100,7 @@ export default function About() {
                     autoAlpha: 1,
                     stagger: 0.15,
                     ease: "none",
-                    scrollTrigger: {
-                        trigger: section,
-                        start: "top 50%",
-                        end: "top 25%",
-                        scrub: 0,
-                    },
-                }
-            );
-
-            // Paragraph reveal
-            gsap.fromTo(
-                ".about-copy",
-                {
-                    y: 30,
-                    autoAlpha: 0,
-                },
-                {
-                    y: 0,
-                    autoAlpha: 1,
-                    stagger: 0.1,
-                    ease: "none",
-                    scrollTrigger: {
-                        trigger: section,
-                        start: "top 50%",
-                        end: "top 30%",
-                        scrub: 0,
-                    },
+                    duration: 1,
                 }
             );
 
@@ -222,18 +262,13 @@ export default function About() {
                         </div>
                     </div>
 
-
                     {/* Paragraph */}
 
                     <div className="space-y-5 font-[var(--font-inter)] text-base leading-8 text-neutral-700 sm:text-[17px]">
                         <p className="about-copy">
                             I&apos;m a computer science student who enjoys
                             understanding how things work — and building
-                            them from the ground up.
-                        </p>
-
-                        <p className="about-copy">
-                            My interests span full-stack engineering,
+                            them from the ground up. My interests span full-stack engineering,
                             artificial intelligence, and the systems that
                             bring software to life.
                         </p>
@@ -242,23 +277,20 @@ export default function About() {
                             Whether I&apos;m developing an application or
                             experimenting with language models, I like going
                             beyond making things work to understanding why
-                            they work.
-                        </p>
-
-                        <p className="about-copy">
-                            I&apos;m continuously learning, building, and
+                            they work. I&apos;m continuously learning, building, and
                             exploring ideas that challenge me to become a
                             better engineer.
                         </p>
+
                     </div>
 
-                    <a
+                    {/* <a
                         href="#projects"
                         className="mt-9 inline-flex w-fit items-center gap-3 border-b border-black pb-2 text-sm font-semibold text-black transition-all duration-300 hover:gap-5"
                     >
                         Explore my work
                         <span aria-hidden="true">↗</span>
-                    </a>
+                    </a> */}
                 </div>
 
                 {/* Right: 3D portrait */}
@@ -279,10 +311,10 @@ export default function About() {
                         />
                     </div>
 
-                    <p className="mt-4 flex items-center gap-2.5 text-[10px] font-medium uppercase tracking-[0.12em] text-neutral-500 sm:text-xs">
+                    {/* <p className="mt-4 flex items-center gap-2.5 text-[10px] font-medium uppercase tracking-[0.12em] text-neutral-500 sm:text-xs">
                         <span className="h-2 w-2 rounded-full bg-black" />
                         Computer Science · Bhopal, India
-                    </p>
+                    </p> */}
                 </div>
 
             </div>
