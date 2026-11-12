@@ -83,26 +83,6 @@ const projects: Project[] = [
         live: "https://risknexus.vercel.app",
         gradient: "linear-gradient(135deg, #30120c 0%, #c2410c 100%)",
     },
-    {
-        slug: "granthanam",
-        title: "Granthanam",
-        category: "Full-Stack Development",
-        tags: ["NEXT.JS", "SANSKRIT", "WEB DEVELOPMENT"],
-        description:
-            "A digital platform for exploring and preserving Sanskrit literature and traditional knowledge.",
-        github: "https://github.com/your-username/granthanam",
-        gradient: "linear-gradient(135deg, #24120c 0%, #98552c 100%)",
-    },
-    {
-        slug: "kisanconnect",
-        title: "KisanConnect",
-        category: "Full-Stack Development & Data Integration",
-        tags: ["REACT", "APIS", "AGRICULTURE"],
-        description:
-            "A farmer-focused marketplace integrating mandi prices and weather information.",
-        github: "https://github.com/your-username/kisanconnect",
-        gradient: "linear-gradient(135deg, #102619 0%, #39864a 100%)",
-    },
 ];
 
 const INITIAL_PROJECT_COUNT = 4;
@@ -271,19 +251,19 @@ export default function Projects() {
 
     return (
         <section
-            id="projects"
+            id="work"
             ref={sectionRef}
-            className="relative mx-auto w-full max-w-[1600px] px-6 py-24 sm:px-10 lg:px-20 lg:py-32"
+            className="relative mx-auto w-full max-w-[1600px] px-6 py-4 sm:px-10 lg:px-20 lg:py-32"
         >
             {/* Section heading */}
-            <div className="mb-12 flex items-center justify-between">
+            <div className="mb-12 lg:relative lg:left-[11%] flex items-center justify-between">
                 <p className="text-xs font-medium uppercase tracking-[0.22em] text-neutral-400">
                     RECENT WORK
                 </p>
             </div>
 
             {/* Project list */}
-            <div className="relative border-t border-neutral-200 dark:border-neutral-800">
+            <div className="hidden lg:block relative left-1/2 -translate-x-1/2 lg:w-[80%] border-t border-neutral-200 dark:border-neutral-800">
                 {visibleProjects.map((project, index) => {
                     const isActive = activeIndex === index;
 
@@ -441,40 +421,6 @@ export default function Projects() {
                 )}
             </div>
 
-            {/* View More */}
-            {hasMore && (
-                <div className="flex justify-center pt-12 lg:pt-16">
-                    <button
-                        type="button"
-                        onClick={showAllProjects}
-                        className="group inline-flex items-center gap-3 rounded-full border border-neutral-300 px-7 py-3.5 text-sm font-medium text-neutral-900 transition-all duration-300 hover:border-neutral-900 hover:bg-neutral-900 hover:text-white dark:border-neutral-700 dark:text-white dark:hover:border-white dark:hover:bg-white dark:hover:text-black"
-                    >
-                        View More Projects
-                        <ArrowDownRight
-                            size={17}
-                            className="transition-transform duration-300 group-hover:translate-x-1 group-hover:translate-y-1"
-                        />
-                    </button>
-                </div>
-            )}
-
-            {/* Show Less */}
-            {!hasMore && (
-                <div className="flex justify-center pt-12 lg:pt-16">
-                    <button
-                        type="button"
-                        onClick={showFewerProjects}
-                        className="group inline-flex items-center gap-3 rounded-full border border-neutral-300 px-7 py-3.5 text-sm font-medium text-neutral-900 transition-colors hover:bg-neutral-900 hover:text-white dark:border-neutral-700 dark:text-white dark:hover:bg-white dark:hover:text-black"
-                    >
-                        Show Less
-                        <ArrowDownRight
-                            size={17}
-                            className="rotate-180"
-                        />
-                    </button>
-                </div>
-            )}
-
             {/* Mobile project cards */}
             <div className="mt-8 grid grid-cols-1 gap-4 md:hidden">
                 {visibleProjects.map((project) => (
@@ -550,6 +496,24 @@ export default function Projects() {
                     </article>
                 ))}
             </div>
+
+            {/* Show Less */}
+            {!hasMore && (
+                <div className="flex justify-center pt-12 lg:pt-16">
+                    <button
+                        type="button"
+                        onClick={showFewerProjects}
+                        className="group inline-flex items-center gap-3 rounded-full border border-neutral-300 px-7 py-3.5 text-sm font-medium text-neutral-900 transition-colors hover:bg-neutral-900 hover:text-white dark:border-neutral-700 dark:text-white dark:hover:bg-white dark:hover:text-black"
+                    >
+                        Show Less
+                        <ArrowDownRight
+                            size={17}
+                            className="rotate-180"
+                        />
+                    </button>
+                </div>
+            )}
+
         </section>
     );
 }

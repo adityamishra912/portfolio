@@ -2,9 +2,23 @@
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import gsap from "gsap";
 
 const EMAIL = "aadarshrai1801@gmail.com";
-const PHONE = "+918434501384";
+
+const CONNECT_WITH_ME_ITEMS = [
+    { label: "LinkedIn", href: "#home" },
+    { label: "GitHUb", href: "#about" },
+    { label: "LeetCode", href: "#work" },
+    { label: "Email", href: "#contact" },
+];
+
+const EXPLORE_ITEMS = [
+    { label: "Home", href: "/#home" },
+    { label: "About", href: "/#about" },
+    { label: "Work", href: "/work" },
+    { label: "Contact", href: "/contact" },
+];
 
 export default function Footer() {
     const spacerRef = useRef<HTMLDivElement>(null);
@@ -15,6 +29,126 @@ export default function Footer() {
     const buttonRef = useRef<HTMLDivElement>(null);
     const buttonRowRef = useRef<HTMLDivElement>(null);
     const arrowRef = useRef<HTMLDivElement>(null);
+    const navLinkRefs = useRef<(HTMLAnchorElement | null)[]>([]);
+    const navTextRefs = useRef<(HTMLSpanElement | null)[]>([]);
+    const navUnderlineRefs = useRef<(HTMLSpanElement | null)[]>([]);
+
+    // Footer links animation
+    useEffect(() => {
+        const links = navLinkRefs.current;
+        const texts = navTextRefs.current;
+        const underlines = navUnderlineRefs.current;
+
+        const cleanups: (() => void)[] = [];
+
+        links.forEach((link, index) => {
+            const text = texts[index];
+            const underline = underlines[index];
+
+            if (!link || !text || !underline) return;
+
+            // Smooth cursor-following movement in both directions.
+            const moveTextX = gsap.quickTo(text, "x", {
+                duration: 0.3,
+                ease: "power3.out",
+            });
+
+            const moveTextY = gsap.quickTo(text, "y", {
+                duration: 0.3,
+                ease: "power3.out",
+            });
+
+            const moveUnderlineX = gsap.quickTo(underline, "x", {
+                duration: 0.45,
+                ease: "power3.out",
+            });
+
+            const moveUnderlineY = gsap.quickTo(underline, "y", {
+                duration: 0.45,
+                ease: "power3.out",
+            });
+
+            const handleMouseMove = (event: MouseEvent) => {
+                const bounds = link.getBoundingClientRect();
+
+                // Normalize cursor position relative to the link's center.
+                const relativeX = gsap.utils.clamp(
+                    -1,
+                    1,
+                    (event.clientX - (bounds.left + bounds.width / 2)) /
+                    (bounds.width / 2)
+                );
+
+                const relativeY = gsap.utils.clamp(
+                    -1,
+                    1,
+                    (event.clientY - (bounds.top + bounds.height / 2)) /
+                    (bounds.height / 2)
+                );
+
+                // Text responds more strongly.
+                moveTextX(relativeX * 10);
+                moveTextY(relativeY * 7);
+
+                // Underline follows with reduced intensity.
+                moveUnderlineX(relativeX * 3);
+                moveUnderlineY(relativeY * 2);
+            };
+
+            const handleMouseEnter = () => {
+                gsap.to(text, {
+                    scale: 1.08,
+                    duration: 0.3,
+                    ease: "power3.out",
+                    overwrite: "auto",
+                });
+
+                gsap.to(underline, {
+                    scaleX: 1,
+                    duration: 0.4,
+                    ease: "power3.out",
+                    overwrite: "auto",
+                });
+            };
+
+            const handleMouseLeave = () => {
+                // Reset through the same quickTo functions.
+                // Do not create competing x/y tweens.
+                moveTextX(0);
+                moveTextY(0);
+                moveUnderlineX(0);
+                moveUnderlineY(0);
+
+                gsap.to(text, {
+                    scale: 1,
+                    duration: 0.4,
+                    ease: "power3.out",
+                    overwrite: "auto",
+                });
+
+                gsap.to(underline, {
+                    scaleX: 0,
+                    duration: 0.35,
+                    ease: "power3.inOut",
+                    overwrite: "auto",
+                });
+            };
+
+            link.addEventListener("mousemove", handleMouseMove);
+            link.addEventListener("mouseenter", handleMouseEnter);
+            link.addEventListener("mouseleave", handleMouseLeave);
+
+            cleanups.push(() => {
+                link.removeEventListener("mousemove", handleMouseMove);
+                link.removeEventListener("mouseenter", handleMouseEnter);
+                link.removeEventListener("mouseleave", handleMouseLeave);
+
+                gsap.killTweensOf([text, underline]);
+            });
+        });
+
+        return () => cleanups.forEach((cleanup) => cleanup());
+    }, []);
 
     useEffect(() => {
         const spacer = spacerRef.current;
@@ -219,61 +353,120 @@ export default function Footer() {
                         {/* Floating CTA */}
                         <div
                             ref={buttonRowRef}
-                            className="relative mb-10 h-20 border-t border-white/20 sm:mb-14 sm:h-24"
+                            className="relative mb-1 h-20 border-t border-white/20 sm:mb-14 sm:h-24"
                         >
                             <div
                                 ref={buttonRef}
-                                className="absolute right-0 top-0 z-20 h-28 w-28 -translate-x-1/2 -translate-y-1/2 will-change-transform sm:h-36 sm:w-36"
+                                className="absolute right-0 top-1/2 z-20 h-28 w-28 -translate-x-1/2 -translate-y-1/2 will-change-transform sm:h-36 sm:w-36"
                             >
                                 <Link
                                     href="/contact"
-                                    className="group relative flex h-full w-full items-center justify-center overflow-hidden rounded-full border border-white/25 bg-white text-sm font-medium text-[#141517] transition-colors duration-300 hover:bg-cyan-300 sm:text-base"
+                                    className="group relative flex h-full w-full items-center justify-center overflow-hidden rounded-full bg-white text-sm font-medium text-[#141517] sm:text-base"
                                 >
-                                    <span className="relative z-10">Get in touch</span>
+                                    <span
+                                        aria-hidden="true"
+                                        className="absolute inset-0 rounded-full bg-[#4f46e5] transition-transform duration-500 group-hover:translate-y-0 translate-y-full"
+                                    />
+
+                                    <span className="relative z-10 transition-colors duration-300 group-hover:text-white">
+                                        Get in touch
+                                    </span>
                                 </Link>
                             </div>
                         </div>
 
+                        {/* Email */}
+
+                        <div className="mt-2 lg:mt-0 flex flex-wrap gap-3">
+                            <a
+                                href={`mailto:${EMAIL}`}
+                                className="rounded-full border border-white/20 px-8 py-5 font-medium transition-colors duration-300 hover:border-[#4f46e5] hover:bg-[#4f46e5]"
+                            >
+                                {EMAIL}
+                            </a>
+                        </div>
+
                         {/* Connect with me */}
-                        <div>
-                            <p className="mb-4 text-xs uppercase tracking-[0.18em] text-white/45">
-                                Connect with me
-                            </p>
 
-                            <ul className="flex flex-col items-start gap-4 text-sm text-white/80 sm:text-base">
-                                <li>
-                                    <a
-                                        href="https://www.linkedin.com/in/aadarshrai1801/"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="transition-colors hover:text-cyan-300"
-                                    >
-                                        LinkedIn ↗
-                                    </a>
-                                </li>
+                        <div className="mt-12 grid grid-cols-2 grid-rows-1">
+                            {/* Connect with me */}
+                            <div className="flex flex-col items-center">
+                                <p className="mb-4 text-xs uppercase tracking-[0.18em] text-white/45">
+                                    Connect with me
+                                </p>
 
-                                <li>
-                                    <a
-                                        href="https://github.com/Aadarshrai1801"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="transition-colors hover:text-cyan-300"
-                                    >
-                                        GitHub ↗
-                                    </a>
-                                </li>
+                                <ul className="flex flex-col items-start gap-4 text-sm text-white/80 sm:text-base">
 
-                                <li>
-                                    <a
-                                        href="https://leetcode.com/"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="transition-colors hover:text-cyan-300"
-                                    >
-                                        LeetCode ↗
-                                    </a>
-                                </li>
-                            </ul>
+                                    {CONNECT_WITH_ME_ITEMS.map((item, index) => (
+                                        <li key={item.label}>
+                                            <Link
+                                                key={item.label}
+                                                ref={(element) => {
+                                                    navLinkRefs.current[index] = element;
+                                                }}
+                                                href={item.href}
+                                                className="relative flex min-w-12 justify-center px-2 py-2 text-sm sm:px-3 sm:text-base"
+                                            >
+                                                <span
+                                                    ref={(element) => {
+                                                        navTextRefs.current[index] = element;
+                                                    }}
+                                                    className="relative z-10 inline-block origin-center whitespace-nowrap"
+                                                >
+                                                    {item.label}
+                                                </span>
+
+                                                <span
+                                                    ref={(element) => {
+                                                        navUnderlineRefs.current[index] = element;
+                                                    }}
+                                                    aria-hidden="true"
+                                                    className="absolute bottom-1 left-2 right-2 h-px origin-center scale-x-0 bg-current sm:left-3 sm:right-3"
+                                                />
+                                            </Link>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+
+                            {/* Website navigation */}
+                            <div className="flex flex-col items-center">
+                                <p className="mb-4 text-xs uppercase tracking-[0.18em] text-white/45">
+                                    Explore
+                                </p>
+
+                                <ul className="flex flex-col items-start gap-4 text-sm text-white/80 sm:text-base">
+                                    {EXPLORE_ITEMS.map((item, index) => (
+                                        <li key={item.label}>
+                                            <Link
+                                                key={item.label}
+                                                ref={(element) => {
+                                                    navLinkRefs.current[index] = element;
+                                                }}
+                                                href={item.href}
+                                                className="relative flex min-w-12 justify-center px-2 py-2 text-sm sm:px-3 sm:text-base"
+                                            >
+                                                <span
+                                                    ref={(element) => {
+                                                        navTextRefs.current[index] = element;
+                                                    }}
+                                                    className="relative z-10 inline-block origin-center whitespace-nowrap"
+                                                >
+                                                    {item.label}
+                                                </span>
+
+                                                <span
+                                                    ref={(element) => {
+                                                        navUnderlineRefs.current[index] = element;
+                                                    }}
+                                                    aria-hidden="true"
+                                                    className="absolute bottom-1 left-2 right-2 h-px origin-center scale-x-0 bg-current sm:left-3 sm:right-3"
+                                                />
+                                            </Link>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
                         </div>
 
                     </div>

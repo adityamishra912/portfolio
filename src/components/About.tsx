@@ -1,14 +1,14 @@
-
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 export default function About() {
     const sectionRef = useRef<HTMLElement>(null);
     const imageRef = useRef<HTMLImageElement>(null);
     const circleRef = useRef<HTMLDivElement>(null);
+    const [hovered, setHovered] = useState(false);
+    const [cursor, setCursor] = useState({ x: 0, y: 0 });
 
     // In animation with on-scroll
     useEffect(() => {
@@ -23,46 +23,7 @@ export default function About() {
             if (prefersReducedMotion) return;
 
             // Heading and eyebrow reveal
-            // gsap.fromTo(
-            //     ".about-heading",
-            //     {
-            //         y: 40,
-            //         autoAlpha: 0,
-            //     },
-            //     {
-            //         y: 0,
-            //         autoAlpha: 1,
-            //         stagger: 0.15,
-            //         ease: "none",
-            //         scrollTrigger: {
-            //             trigger: section,
-            //             start: "top 50%",
-            //             end: "top 25%",
-            //             scrub: 0,
-            //         },
-            //     }
-            // );
 
-            // Paragraph reveal
-            // gsap.fromTo(
-            //     ".about-copy",
-            //     {
-            //         y: 40,
-            //         autoAlpha: 0,
-            //     },
-            //     {
-            //         y: 0,
-            //         autoAlpha: 1,
-            //         stagger: 0.15,
-            //         ease: "none",
-            //         scrollTrigger: {
-            //             trigger: section,
-            //             start: "top 50%",
-            //             end: "top 30%",
-            //             scrub: 0,
-            //         },
-            //     }
-            // );
 
             const tl = gsap.timeline({
                 scrollTrigger: {
@@ -232,30 +193,57 @@ export default function About() {
             ref={sectionRef}
             id="about"
             aria-labelledby="about-heading"
-            className="w-full overflow-hidden bg-white py-20 text-black sm:py-24 lg:py-36"
+            className="h-auto w-full overflow-hidden bg-white py-20 text-black sm:py-24 lg:h-screen lg:py-0"
         >
-            <div className="mx-auto grid w-[88%] max-w-[1200px] grid-cols-1 items-center gap-12 md:grid-cols-[1.1fr_0.8fr] md:gap-12 lg:gap-28">
+            <div className="mx-auto grid lg:h-full w-[88%] max-w-[1200px] grid-cols-1 items-center gap-12 md:grid-cols-[1.1fr_0.8fr] md:gap-12 lg:gap-28">
                 {/* Left: About content */}
                 <div className="max-w-2xl">
 
                     {/* Heading */}
 
-                    <div className="about-heading mb-4 flex justify-start">
-                        {/* Perspective must be on the parent */}
-                        <div className="[perspective:800px]">
-                            <div
-                                ref={circleRef}
-                                onMouseMove={(event) =>
-                                    handle3DMouseMove(event, circleRef.current, 20)
-                                }
-                                onMouseLeave={() =>
-                                    handle3DMouseLeave(circleRef.current)
-                                }
-                                className="group relative flex aspect-square w-38 cursor-pointer items-center justify-center overflow-hidden rounded-full bg-[#1c1c1f] [transform-style:preserve-3d] [backface-visibility:hidden] [will-change:transform]"
-                            >
-                                <div className="absolute inset-0 translate-y-full rounded-full bg-[#4659ed] transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-y-0 motion-reduce:transition-none" />
+                    <div className="about-heading mb-10 flex justify-start">
+                        {/* Outer wrapper: subtle magnetic movement */}
+                        <div
+                            className="relative"
+                            style={{
+                                transform: `translate(${cursor.x * 1.0}px, ${cursor.y * 1.0}px)`,
+                                transition: hovered
+                                    ? "transform 80ms ease-out"
+                                    : "transform 350ms cubic-bezier(0.22, 1, 0.36, 1)",
+                            }}
+                            onMouseEnter={() => setHovered(true)}
+                            onMouseLeave={() => {
+                                setHovered(false);
+                                setCursor({ x: 0, y: 0 });
+                            }}
+                            onMouseMove={(event) => {
+                                const rect = event.currentTarget.getBoundingClientRect();
+                                const x = (event.clientX - rect.left) / rect.width - 0.5;
+                                const y = (event.clientY - rect.top) / rect.height - 0.5;
 
-                                <h2 className="relative z-10 text-2xl font-semibold tracking-tight text-white">
+                                setCursor({ x: x * 8, y: y * 8 });
+                            }}
+                        >
+                            {/* Pill */}
+                            <div className="group relative flex h-24 w-60 cursor-pointer items-center justify-center overflow-hidden rounded-full bg-[#171717]">
+                                {/* Blue hover background */}
+                                <span
+                                    aria-hidden="true"
+                                    className={`absolute inset-0 rounded-full bg-[#4f46e5] ${hovered ? "nav-circle-enter" : "nav-circle-hidden"
+                                        }`}
+                                />
+
+                                {/* Heading moves more strongly */}
+                                <h2
+                                    id="about-heading"
+                                    className="relative z-10 text-2xl font-semibold tracking-tight text-white"
+                                    style={{
+                                        transform: `translate(${cursor.x * 1.8}px, ${cursor.y * 1.8}px)`,
+                                        transition: hovered
+                                            ? "transform 60ms ease-out"
+                                            : "transform 350ms cubic-bezier(0.22, 1, 0.36, 1)",
+                                    }}
+                                >
                                     About Me
                                 </h2>
                             </div>

@@ -140,8 +140,6 @@ export default function HeroSection() {
         return () => cleanups.forEach((cleanup) => cleanup());
     }, []);
 
-
-
     // Image delay animation
     useEffect(() => {
         const portrait = portraitRef.current;

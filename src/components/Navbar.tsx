@@ -88,7 +88,7 @@ export default function Navbar() {
                 className={`fixed right-5 top-5 z-[100] sm:right-8 ${scrolled ? "pointer-events-auto" : "pointer-events-none"
                     }`}
                 style={{
-                    transform: `translate(${cursor.x * 0.35}px, ${cursor.y * 0.35}px)`,
+                    transform: `translate(${cursor.x * 1.0}px, ${cursor.y * 1.0}px)`,
                     transition: hovered
                         ? "transform 80ms ease-out"
                         : "transform 350ms cubic-bezier(0.22, 1, 0.36, 1)",
@@ -135,7 +135,7 @@ export default function Navbar() {
                     {/* Three lines with stronger cursor movement */}
                     <span
                         aria-hidden="true"
-                        className="relative z-10 flex h-7 w-7 items-center justify-center"
+                        className="relative z-10 flex h-7 w-8 items-center justify-center"
                         style={{
                             transform: `translate(${cursor.x * 1.8}px, ${cursor.y * 1.8}px)`,
                             transition: hovered
