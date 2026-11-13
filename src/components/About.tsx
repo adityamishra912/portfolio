@@ -91,61 +91,6 @@ export default function About() {
         return () => ctx.revert();
     }, []);
 
-    // 3D Hover Handler
-
-    const handle3DMouseMove = (
-        event: React.MouseEvent<HTMLElement>,
-        target: HTMLElement | null,
-        intensity = 20
-    ) => {
-        if (
-            !target ||
-            window.matchMedia("(max-width: 767px)").matches ||
-            window.matchMedia("(prefers-reduced-motion: reduce)").matches
-        ) {
-            return;
-        }
-
-        const rect = event.currentTarget.getBoundingClientRect();
-
-        // Cursor position relative to the center (-0.5 to 0.5)
-        const x = (event.clientX - rect.left) / rect.width - 0.5;
-        const y = (event.clientY - rect.top) / rect.height - 0.5;
-
-        gsap.to(target, {
-            // Stronger 3D rotation
-            rotateY: x * intensity * 1.5,
-            rotateX: -y * intensity * 1.5,
-
-            // Magnetic movement: the circle follows the cursor
-            x: x * 35,
-            y: y * 35,
-
-            // Slight enlargement on hover
-            scale: 1.05,
-
-            duration: 0.35,
-            ease: "power3.out",
-            overwrite: "auto",
-        });
-    };
-
-    const handle3DMouseLeave = (target: HTMLElement | null) => {
-        if (!target) return;
-
-        gsap.to(target, {
-            rotateX: 0,
-            rotateY: 0,
-            x: 0,
-            y: 0,
-            scale: 1,
-            duration: 0.7,
-            ease: "elastic.out(1, 0.5)",
-            overwrite: "auto",
-        });
-    };
-
-
     // Image hover animation
     const handleMouseMove = (
         event: React.MouseEvent<HTMLDivElement>

@@ -131,7 +131,7 @@ html {
 }
 
 .footer-scroll-track {
-  height: 100vh;
+  height: 100dvh;
   visibility: hidden;
 }
 

@@ -4,13 +4,11 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import gsap from "gsap";
 
-const EMAIL = "aadarshrai1801@gmail.com";
-
 const CONNECT_WITH_ME_ITEMS = [
-    { label: "LinkedIn", href: "#home" },
-    { label: "GitHUb", href: "#about" },
-    { label: "LeetCode", href: "#work" },
-    { label: "Email", href: "#contact" },
+    { label: "LinkedIn", href: "https://www.linkedin.com/in/adityamishra912" },
+    { label: "GitHUb", href: "https://github.com/adityamishra912" },
+    { label: "LeetCode", href: "https://leetcode.com/adityamishra0912" },
+    { label: "Email", href: "mailto:aditya.mishra0989@gmail.com" },
 ];
 
 const EXPLORE_ITEMS = [
@@ -32,6 +30,10 @@ export default function Footer() {
     const navLinkRefs = useRef<(HTMLAnchorElement | null)[]>([]);
     const navTextRefs = useRef<(HTMLSpanElement | null)[]>([]);
     const navUnderlineRefs = useRef<(HTMLSpanElement | null)[]>([]);
+    const buttonMotionRef = useRef<HTMLDivElement>(null);
+    const buttonLinkRef = useRef<HTMLAnchorElement>(null);
+    const [buttonHovered, setButtonHovered] = useState(false);
+    const [buttonCursor, setButtonCursor] = useState({ x: 0, y: 0 });
 
     // Footer links animation
     useEffect(() => {
@@ -224,11 +226,17 @@ export default function Footer() {
 
             const p = currentProgress;
 
-            // Original rounded-curtain effect.
-            roundedWrap.style.height = `${(1 - p) * 8}vh`;
+            // Rounded white boundary disappears completely at the end.
+            if (p >= 0.995) {
+                roundedWrap.style.height = "0px";
+                roundedWrap.style.visibility = "hidden";
+            } else {
+                roundedWrap.style.visibility = "visible";
+                roundedWrap.style.height = `${(1 - p) * window.innerHeight * 0.08}px`;
+            }
 
             // Footer content rises into its final position.
-            footerContent.style.transform = `translate3d(0, ${(1 - p) * 280}px, 0)`;
+            footerContent.style.transform = `translate3d(0, ${(1 - p) * 100}px, 0)`;
 
             // Heading has a smaller parallax offset.
             heading.style.transform = `translate3d(0, ${(1 - p) * 60}px, 0)`;
@@ -259,6 +267,8 @@ export default function Footer() {
             calculateProgress();
         };
 
+        window.visualViewport?.addEventListener("resize", handleResize);
+
         if ("ResizeObserver" in window) {
             resizeObserver = new ResizeObserver(updateSpacer);
             resizeObserver.observe(footerContent);
@@ -273,7 +283,8 @@ export default function Footer() {
         return () => {
             window.removeEventListener("scroll", calculateProgress);
             window.removeEventListener("resize", handleResize);
-
+            window.visualViewport?.removeEventListener("resize", handleResize);
+            
             resizeObserver?.disconnect();
 
             if (rafId) cancelAnimationFrame(rafId);
@@ -307,7 +318,7 @@ export default function Footer() {
                 ref={footerRef}
                 id="contact"
                 aria-label="Contact and social links"
-                className="footer-fixed invisible pointer-events-none fixed inset-x-0 bottom-0 z-10 flex h-screen min-h-screen flex-col justify-end overflow-hidden bg-[#141517] text-white"
+                className="footer-fixed invisible pointer-events-none fixed inset-x-0 bottom-0 z-10 flex h-dvh min-h-dvh flex-col justify-end overflow-hidden bg-[#141517] text-white"            
             >
                 <div
                     ref={footerContentRef}
@@ -353,38 +364,80 @@ export default function Footer() {
                         {/* Floating CTA */}
                         <div
                             ref={buttonRowRef}
-                            className="relative mb-1 h-20 border-t border-white/20 sm:mb-14 sm:h-24"
+                            className="relative mb-1 h-20 border-t border-white/20 sm:mb-2 sm:h-24"
                         >
+
+
                             <div
                                 ref={buttonRef}
-                                className="absolute right-0 top-1/2 z-20 h-28 w-28 -translate-x-1/2 -translate-y-1/2 will-change-transform sm:h-36 sm:w-36"
+                                className="absolute left-[76%] lg:left-[76%] top-1/2 z-20 h-28 w-28 lg:-translate-x-1/2 -translate-y-1/2 will-change-transform sm:h-36 sm:w-36"
                             >
-                                <Link
-                                    href="/contact"
-                                    className="group relative flex h-full w-full items-center justify-center overflow-hidden rounded-full bg-white text-sm font-medium text-[#141517] sm:text-base"
-                                >
-                                    <span
-                                        aria-hidden="true"
-                                        className="absolute inset-0 rounded-full bg-[#4f46e5] transition-transform duration-500 group-hover:translate-y-0 translate-y-full"
-                                    />
+                                {/* Cursor-following wrapper */}
+                                <div
+                                    ref={buttonMotionRef}
+                                    className="h-full w-full"
+                                    style={{
+                                        transform: `translate(${buttonCursor.x * 1.0}px, ${buttonCursor.y * 1.0}px)`,
+                                        transition: buttonHovered
+                                            ? "transform 80ms ease-out"
+                                            : "transform 350ms cubic-bezier(0.22, 1, 0.36, 1)",
+                                    }}
+                                    onMouseEnter={() => setButtonHovered(true)}
+                                    onMouseLeave={() => {
+                                        setButtonHovered(false);
+                                        setButtonCursor({ x: 0, y: 0 });
+                                    }}
+                                    onMouseMove={(event) => {
+                                        const rect = event.currentTarget.getBoundingClientRect();
 
-                                    <span className="relative z-10 transition-colors duration-300 group-hover:text-white">
-                                        Get in touch
-                                    </span>
-                                </Link>
+                                        const x = (event.clientX - rect.left) / rect.width - 0.5;
+                                        const y = (event.clientY - rect.top) / rect.height - 0.5;
+
+                                        setButtonCursor({ x: x * 8, y: y * 8 });
+                                    }}
+                                >
+                                    <Link
+                                        ref={buttonLinkRef}
+                                        href="/contact"
+                                        className="group relative flex h-full w-full items-center justify-center overflow-hidden rounded-full bg-[#6366f1] text-sm font-medium text-[#141517] sm:text-base"
+                                    >
+                                        {/* Blue hover background */}
+                                        <span
+                                            aria-hidden="true"
+                                            className={`absolute inset-0 rounded-full bg-[#4f46e5] ${buttonHovered
+                                                ? "nav-circle-enter"
+                                                : "nav-circle-hidden"
+                                                }`}
+                                        />
+
+                                        {/* Text follows cursor more strongly */}
+                                        <span
+                                            className="relative z-10 text-white"
+                                            style={{
+                                                transform: `translate(${buttonCursor.x * 1.8}px, ${buttonCursor.y * 1.8}px)`,
+                                                transition: buttonHovered
+                                                    ? "transform 60ms ease-out"
+                                                    : "transform 350ms cubic-bezier(0.22, 1, 0.36, 1)",
+                                            }}
+                                        >
+                                            Get in touch
+                                        </span>
+                                    </Link>
+                                </div>
                             </div>
+
+
                         </div>
 
                         {/* Email */}
-
-                        <div className="mt-2 lg:mt-0 flex flex-wrap gap-3">
+                        {/* <div className="mt-2 lg:mt-0 flex flex-wrap gap-3">
                             <a
                                 href={`mailto:${EMAIL}`}
                                 className="rounded-full border border-white/20 px-8 py-5 font-medium transition-colors duration-300 hover:border-[#4f46e5] hover:bg-[#4f46e5]"
                             >
                                 {EMAIL}
                             </a>
-                        </div>
+                        </div> */}
 
                         {/* Connect with me */}
 
@@ -441,14 +494,14 @@ export default function Footer() {
                                             <Link
                                                 key={item.label}
                                                 ref={(element) => {
-                                                    navLinkRefs.current[index] = element;
+                                                    navLinkRefs.current[index + CONNECT_WITH_ME_ITEMS.length] = element;
                                                 }}
                                                 href={item.href}
                                                 className="relative flex min-w-12 justify-center px-2 py-2 text-sm sm:px-3 sm:text-base"
                                             >
                                                 <span
                                                     ref={(element) => {
-                                                        navTextRefs.current[index] = element;
+                                                        navTextRefs.current[index + CONNECT_WITH_ME_ITEMS.length] = element;
                                                     }}
                                                     className="relative z-10 inline-block origin-center whitespace-nowrap"
                                                 >
@@ -457,7 +510,7 @@ export default function Footer() {
 
                                                 <span
                                                     ref={(element) => {
-                                                        navUnderlineRefs.current[index] = element;
+                                                        navUnderlineRefs.current[index + CONNECT_WITH_ME_ITEMS.length] = element;
                                                     }}
                                                     aria-hidden="true"
                                                     className="absolute bottom-1 left-2 right-2 h-px origin-center scale-x-0 bg-current sm:left-3 sm:right-3"

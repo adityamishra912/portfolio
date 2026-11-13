@@ -91,6 +91,11 @@ export default function Projects() {
     const sectionRef = useRef<HTMLElement>(null);
     const previewRef = useRef<HTMLDivElement>(null);
     const contentRef = useRef<HTMLDivElement>(null);
+    const [showLessHovered, setShowLessHovered] = useState(false);
+    const [showLessCursor, setShowLessCursor] = useState({ x: 0, y: 0 });
+    const [hovered, setHovered] = useState(false);
+    const [cursor, setCursor] = useState({ x: 0, y: 0 });
+
 
     const isPointerOverCard = useRef(false);
 
@@ -290,8 +295,8 @@ export default function Projects() {
                         >
                             <span
                                 className={`text-4xl font-medium tracking-[-0.065em] transition-colors duration-300 sm:text-5xl md:text-6xl lg:text-7xl ${isActive
-                                        ? "text-neutral-400 dark:text-neutral-500"
-                                        : "text-neutral-900 dark:text-neutral-100"
+                                    ? "text-neutral-400 dark:text-neutral-500"
+                                    : "text-neutral-900 dark:text-neutral-100"
                                     }`}
                             >
                                 {project.title}
@@ -299,8 +304,8 @@ export default function Projects() {
 
                             <span
                                 className={`text-sm tracking-tight transition-colors duration-300 sm:text-base ${isActive
-                                        ? "text-neutral-400"
-                                        : "text-neutral-600 dark:text-neutral-400"
+                                    ? "text-neutral-400"
+                                    : "text-neutral-600 dark:text-neutral-400"
                                     }`}
                             >
                                 {project.category}
@@ -309,8 +314,8 @@ export default function Projects() {
                             <ArrowUpRight
                                 size={21}
                                 className={`hidden transition-all duration-300 lg:block ${isActive
-                                        ? "translate-x-0 opacity-100"
-                                        : "-translate-x-2 opacity-0"
+                                    ? "translate-x-0 opacity-100"
+                                    : "-translate-x-2 opacity-0"
                                     }`}
                             />
                         </button>
@@ -497,22 +502,67 @@ export default function Projects() {
                 ))}
             </div>
 
+
             {/* Show Less */}
-            {!hasMore && (
-                <div className="flex justify-center pt-12 lg:pt-16">
-                    <button
-                        type="button"
-                        onClick={showFewerProjects}
-                        className="group inline-flex items-center gap-3 rounded-full border border-neutral-300 px-7 py-3.5 text-sm font-medium text-neutral-900 transition-colors hover:bg-neutral-900 hover:text-white dark:border-neutral-700 dark:text-white dark:hover:bg-white dark:hover:text-black"
-                    >
-                        Show Less
-                        <ArrowDownRight
-                            size={17}
-                            className="rotate-180"
-                        />
-                    </button>
+            <div className="flex justify-center pt-12 lg:pt-16 lg:mb-0 mb-12">
+                {/* Outer wrapper: subtle magnetic movement */}
+                <div
+                    className="relative"
+                    style={{
+                        transform: `translate(${showLessCursor.x * 1.0}px, ${showLessCursor.y * 1.0}px)`,
+                        transition: showLessHovered
+                            ? "transform 80ms ease-out"
+                            : "transform 350ms cubic-bezier(0.22, 1, 0.36, 1)",
+                    }}
+                    onMouseEnter={() => setShowLessHovered(true)}
+                    onMouseLeave={() => {
+                        setShowLessHovered(false);
+                        setShowLessCursor({ x: 0, y: 0 });
+                    }}
+                    onMouseMove={(event) => {
+                        const rect = event.currentTarget.getBoundingClientRect();
+
+                        const x = (event.clientX - rect.left) / rect.width - 0.5;
+                        const y = (event.clientY - rect.top) / rect.height - 0.5;
+
+                        setShowLessCursor({ x: x * 8, y: y * 8 });
+                    }}
+                >
+                    <Link href="/work">
+                        <button
+                            type="button"
+                            className="relative flex items-center justify-center gap-3 overflow-hidden rounded-full bg-[#171717] px-12 py-7 text-sm font-medium text-white"
+                        >
+                            {/* Blue hover background */}
+                            <span
+                                aria-hidden="true"
+                                className={`absolute inset-0 rounded-full bg-[#4f46e5] ${showLessHovered
+                                    ? "nav-circle-enter"
+                                    : "nav-circle-hidden"
+                                    }`}
+                            />
+
+                            {/* Text follows cursor */}
+                            <span
+                                className="relative text-[16px] z-10 inline-flex items-center gap-3"
+                                style={{
+                                    transform: `translate(${showLessCursor.x * 1.8}px, ${showLessCursor.y * 1.8}px)`,
+                                    transition: showLessHovered
+                                        ? "transform 60ms ease-out"
+                                        : "transform 350ms cubic-bezier(0.22, 1, 0.36, 1)",
+                                }}
+                            >
+                                View More
+                                <ArrowDownRight
+                                    size={17}
+                                    className="rotate-180"
+                                />
+                            </span>
+                        </button>
+                    </Link>
                 </div>
-            )}
+            </div>
+
 
         </section>
     );
