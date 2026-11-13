@@ -263,7 +263,7 @@ export default function HeroSection() {
                     href="#home"
                     className="text-sm font-medium tracking-tight sm:text-base"
                 >
-                    © Aditya Mishra
+                    © 2026 Aditya Mishra
                 </Link>
 
                 <div className="flex items-center gap-1 sm:gap-3">
