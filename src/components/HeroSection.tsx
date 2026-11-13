@@ -11,7 +11,8 @@ const NAV_ITEMS = [
     { label: "Home", href: "#home" },
     { label: "About", href: "#about" },
     { label: "Work", href: "#work" },
-    { label: "Contact", href: "#contact" },
+    { label: "Resume", href: "/resume" },
+    { label: "Contact", href: "/contact" },
 ];
 
 export default function HeroSection() {
@@ -22,6 +23,7 @@ export default function HeroSection() {
     const navLinkRefs = useRef<(HTMLAnchorElement | null)[]>([]);
     const navTextRefs = useRef<(HTMLSpanElement | null)[]>([]);
     const navUnderlineRefs = useRef<(HTMLSpanElement | null)[]>([]);
+    const resumeRef = useRef<HTMLDivElement>(null);
 
     // Navbar animation
     useEffect(() => {
@@ -171,9 +173,10 @@ export default function HeroSection() {
     // Text entrance — synchronized with splash screen
     useEffect(() => {
         const role = roleRef.current;
+        const resume = resumeRef.current;
         const title = titleRef.current;
 
-        if (!role || !title) return;
+        if (!role || !resume || !title) return;
 
         const prefersReducedMotion = window.matchMedia(
             "(prefers-reduced-motion: reduce)"
@@ -181,7 +184,7 @@ export default function HeroSection() {
 
         // Reduced motion: show text immediately.
         if (prefersReducedMotion) {
-            gsap.set([role, title], {
+            gsap.set([role, resume, title], {
                 autoAlpha: 1,
                 clearProps: "transform",
             });
@@ -190,7 +193,7 @@ export default function HeroSection() {
         }
 
         // Keep text hidden until the splash screen finishes.
-        gsap.set(role, {
+        gsap.set([role, resume], {
             autoAlpha: 0,
             y: 35,
         });
@@ -213,7 +216,7 @@ export default function HeroSection() {
             });
 
             intro
-                .to(role, {
+                .to([role, resume], {
                     autoAlpha: 1,
                     y: 0,
                     duration: 0.8,
@@ -314,7 +317,7 @@ export default function HeroSection() {
                 </div>
             </div>
 
-            {/* Professional positioning */}
+            {/* LEFT - Professional positioning */}
             <div className="absolute inset-0 z-10 pointer-events-none text-[#252525]">
                 <div
                     ref={roleRef}
@@ -328,6 +331,30 @@ export default function HeroSection() {
                         Software Engineer
                     </h2>
                 </div>
+            </div>
+
+            {/* RIGHT - Resume positioning */}
+            <div
+                ref={resumeRef}
+                className="absolute top-[46%] right-[4%] max-w-[280px] -translate-y-1/2 text-right"
+            >
+                <span className="lg:mr-6 mb-3 block text-[10px] font-semibold tracking-[0.15em] text-black/60">
+                    EXPLORE MY BACKGROUND
+                </span>
+
+                <Link
+                    href="/resume"
+                    className="pointer-events-auto group inline-block"
+                    aria-label="View my resume"
+                >
+                    <h2 className="lg:mr-6 text-xl lg:text-2xl font-medium leading-[1.4] tracking-tight flex items-center justify-end gap-2">
+                        View Resume
+
+                        <span className="inline-block transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1">
+                            ↗
+                        </span>
+                    </h2>
+                </Link>
             </div>
 
             {/* Oversized name */}

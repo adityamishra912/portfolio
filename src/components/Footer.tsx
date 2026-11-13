@@ -6,15 +6,15 @@ import gsap from "gsap";
 
 const CONNECT_WITH_ME_ITEMS = [
     { label: "LinkedIn", href: "https://www.linkedin.com/in/adityamishra912" },
-    { label: "GitHUb", href: "https://github.com/adityamishra912" },
+    { label: "GitHub", href: "https://github.com/adityamishra912" },
     { label: "LeetCode", href: "https://leetcode.com/adityamishra0912" },
-    { label: "Email", href: "mailto:aditya.mishra0989@gmail.com" },
+    { label: "Email", href: "https://mail.google.com/mail/?view=cm&fs=1&to=aditya.mishra0989@gmail.com" },
 ];
 
 const EXPLORE_ITEMS = [
-    { label: "Home", href: "/#home" },
     { label: "About", href: "/#about" },
     { label: "Work", href: "/work" },
+    { label: "Resume", href: "/resume" },
     { label: "Contact", href: "/contact" },
 ];
 
@@ -267,8 +267,6 @@ export default function Footer() {
             calculateProgress();
         };
 
-        window.visualViewport?.addEventListener("resize", handleResize);
-
         if ("ResizeObserver" in window) {
             resizeObserver = new ResizeObserver(updateSpacer);
             resizeObserver.observe(footerContent);
@@ -283,8 +281,7 @@ export default function Footer() {
         return () => {
             window.removeEventListener("scroll", calculateProgress);
             window.removeEventListener("resize", handleResize);
-            window.visualViewport?.removeEventListener("resize", handleResize);
-            
+
             resizeObserver?.disconnect();
 
             if (rafId) cancelAnimationFrame(rafId);
@@ -318,7 +315,8 @@ export default function Footer() {
                 ref={footerRef}
                 id="contact"
                 aria-label="Contact and social links"
-                className="footer-fixed invisible pointer-events-none fixed inset-x-0 bottom-0 z-10 flex h-dvh min-h-dvh flex-col justify-end overflow-hidden bg-[#141517] text-white"            
+                className="footer-fixed invisible pointer-events-none fixed inset-0 z-10 flex h-dvh min-h-dvh flex-col justify-end overflow-hidden bg-[#141517] text-white"
+            
             >
                 <div
                     ref={footerContentRef}
@@ -326,7 +324,7 @@ export default function Footer() {
                 >
                     <div className="mx-auto w-full max-w-[1440px] px-6 pb-12 sm:px-10 lg:px-16">
                         {/* Heading */}
-                        <div className="relative pb-10 sm:pb-14">
+                        <div className="relative pt-6 pb-10 sm:pb-14">
                             <div
                                 ref={arrowRef}
                                 className="absolute bottom-5 right-0 will-change-transform sm:bottom-8"
@@ -351,10 +349,10 @@ export default function Footer() {
                                 className="text-[clamp(3rem,7.5vw,7.5rem)] font-medium leading-[0.92] tracking-[-0.065em] will-change-transform"
                             >
                                 <span className="flex items-center gap-[0.14em]">
-                                    <span
+                                    {/* <span
                                         aria-hidden="true"
                                         className="inline-block h-[0.72em] w-[0.72em] shrink-0 translate-y-[0.05em] rounded-full bg-white"
-                                    />
+                                    /> */}
                                     Let&apos;s work
                                 </span>
                                 <span className="block">together</span>
@@ -428,16 +426,6 @@ export default function Footer() {
 
 
                         </div>
-
-                        {/* Email */}
-                        {/* <div className="mt-2 lg:mt-0 flex flex-wrap gap-3">
-                            <a
-                                href={`mailto:${EMAIL}`}
-                                className="rounded-full border border-white/20 px-8 py-5 font-medium transition-colors duration-300 hover:border-[#4f46e5] hover:bg-[#4f46e5]"
-                            >
-                                {EMAIL}
-                            </a>
-                        </div> */}
 
                         {/* Connect with me */}
 
@@ -536,28 +524,4 @@ export default function Footer() {
             </section>
         </>
     );
-}
-
-function DubaiTime() {
-    const [time, setTime] = useState("--:-- GST");
-
-    useEffect(() => {
-        const update = () => {
-            setTime(
-                new Intl.DateTimeFormat("en-GB", {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    hour12: true,
-                    timeZone: "Asia/Dubai",
-                }).format(new Date()) + " GST"
-            );
-        };
-
-        update();
-        const id = window.setInterval(update, 15000);
-
-        return () => window.clearInterval(id);
-    }, []);
-
-    return <p className="text-xs text-white/80">{time}</p>;
 }

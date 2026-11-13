@@ -17,7 +17,7 @@ type Project = {
     tags: string[];
     description: string;
     screenshot?: string;
-    github: string;
+    github?: string;
     live?: string;
     gradient: string;
 };
@@ -39,49 +39,51 @@ function GitHubIcon({ size = 14 }: { size?: number }) {
 
 const projects: Project[] = [
     {
-        slug: "marketpulse",
-        title: "MarketPulse",
-        category: "Data Engineering & Development",
-        tags: ["DATA ENGINEERING", "ANALYTICS"],
+        slug: "apexcode",
+        title: "ApexCode",
+        category: "Full Stack Development & Systems Engineering",
+        tags: ["NEXT.JS", "SPRING BOOT", "CODE EXECUTION", "DOCKER"],
         description:
-            "A market intelligence platform focused on data processing, insights, and real-time analytics.",
-        screenshot: "/projects/marketpulse.png",
-        github: "https://github.com/your-username/marketpulse",
-        gradient: "linear-gradient(135deg, #07152f 0%, #2459dc 100%)",
-    },
-    {
-        slug: "plantix",
-        title: "Plantix",
-        category: "Deep Learning & Computer Vision",
-        tags: ["DEEP LEARNING", "COMPUTER VISION"],
-        description:
-            "An intelligent plant analysis system using computer vision to identify plant-related problems.",
-        screenshot: "/projects/plantix.png",
-        github: "https://github.com/your-username/plantix",
-        gradient: "linear-gradient(135deg, #003b27 0%, #16844b 100%)",
-    },
-    {
-        slug: "intellicast",
-        title: "IntelliCast",
-        category: "NLP, LLM & RAG",
-        tags: ["NLP", "LLM", "RAG"],
-        description:
-            "An AI-powered application combining language models and retrieval to deliver contextual responses.",
-        screenshot: "/projects/intellicast.png",
-        github: "https://github.com/your-username/intellicast",
-        gradient: "linear-gradient(135deg, #21103f 0%, #763bd5 100%)",
+            "An online coding assessment platform featuring problem management, multi-language code execution, automated test cases, and an isolated judging environment.",
+        screenshot: "/projects/apexcode.png",
+        github: "https://github.com/binarybrain-7/Online-Assessment-Coding-Platform",
+        live: "https://prognexus-eight.vercel.app/",
+        gradient: "linear-gradient(135deg, #111827 0%, #4338ca 100%)",
     },
     {
         slug: "risknexus",
         title: "RiskNexus",
         category: "Cybersecurity & Artificial Intelligence",
-        tags: ["CYBERSECURITY", "AI", "RISK ANALYSIS"],
+        tags: ["CYBERSECURITY", "MACHINE LEARNING", "RISK QUANTIFICATION", "OPTIMIZATION"],
         description:
-            "A cyber risk quantification platform designed to help organizations evaluate risk and prioritize security investments.",
+            "An AI-powered cyber risk quantification platform that evaluates organizational security risks, estimates potential financial losses, and optimizes cybersecurity investment decisions.",
         screenshot: "/projects/risknexus.png",
         github: "https://github.com/RajMaurya-07/Cyber_Risk_Quantification",
         live: "https://risknexus.vercel.app",
         gradient: "linear-gradient(135deg, #30120c 0%, #c2410c 100%)",
+    },
+    {
+        slug: "tcap",
+        title: "TCAP",
+        category: "Full Stack Development & Platform Engineering",
+        tags: ["NEXT.JS", "TYPESCRIPT", "FIREBASE", "CLOUDINARY"],
+        description:
+            "A campus ambassador management platform featuring role-based dashboards, student onboarding, referral tracking, task submissions, points management, leaderboards, and notifications.",
+        screenshot: "/projects/tcap.png",
+        live: "https://trendyoncampus.com",
+        gradient: "linear-gradient(135deg, #172554 0%, #2563eb 100%)",
+    },
+    {
+        slug: "guardianai",
+        title: "GuardianAI",
+        category: "Artificial Intelligence & Intelligent Systems",
+        tags: ["AI", "MACHINE LEARNING", "INTELLIGENT AUTOMATION"],
+        description:
+            "An intelligent AI-powered system designed to assist with monitoring, threat detection, and proactive decision-making.",
+        screenshot: "/projects/guardian-ai.png",
+        github: "https://github.com/adityamishra912/GuardianAI",
+        live: "https://guardian-ai-navy.vercel.app/",
+        gradient: "linear-gradient(135deg, #052e2b 0%, #0d9488 100%)",
     },
 ];
 
@@ -245,15 +247,6 @@ export default function Projects() {
         }
     }, [activeIndex]);
 
-    function showAllProjects() {
-        setVisibleCount(projects.length);
-    }
-
-    function showFewerProjects() {
-        setVisibleCount(INITIAL_PROJECT_COUNT);
-        setActiveIndex(null);
-    }
-
     return (
         <section
             id="work"
@@ -261,10 +254,11 @@ export default function Projects() {
             className="relative mx-auto w-full max-w-[1600px] px-6 py-4 sm:px-10 lg:px-20 lg:py-32"
         >
             {/* Section heading */}
-            <div className="mb-12 lg:relative lg:left-[11%] flex items-center justify-between">
-                <p className="text-xs font-medium uppercase tracking-[0.22em] text-neutral-400">
+            <div className="mb-12 lg:relative lg:left-[11%] flex flex-col items-between justify-center">
+                <p className="mb-4 lg:mb-0 text-xs font-medium uppercase tracking-[0.22em] text-neutral-400">
                     RECENT WORK
                 </p>
+                <div className="block lg:hidden h-px w-full bg-neutral-200" />
             </div>
 
             {/* Project list */}
@@ -394,7 +388,7 @@ export default function Projects() {
                                 className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2.5 text-xs font-semibold text-neutral-950 transition-transform duration-300 hover:scale-105"
                             >
                                 <FileText size={14} />
-                                Case study
+                                Info
                             </Link>
 
                             <a
@@ -473,7 +467,7 @@ export default function Projects() {
                                 className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2.5 text-xs font-semibold text-black"
                             >
                                 <FileText size={14} />
-                                Case study
+                                Info
                             </Link>
 
                             <a

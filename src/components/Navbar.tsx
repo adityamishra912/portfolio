@@ -1,18 +1,21 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
+import gsap from "gsap";
 
 const navLinks = [
-    { label: "Home", href: "#home" },
-    { label: "About", href: "#about" },
-    { label: "Work", href: "#projects" },
+    { label: "Home", href: "/#home" },
+    { label: "About", href: "/#about" },
+    { label: "Work", href: "/work" },
+    { label: "Resume", href: "/resume" },
     { label: "Contact", href: "#contact" },
 ];
 
 const socialLinks = [
     { label: "LinkedIn", href: "https://www.linkedin.com/in/adityamishra912" },
     { label: "GitHub", href: "https://github.com/adityamishra912" },
-    { label: "Email", href: "mailto:your-email@example.com" },
+    { label: "LeetCode", href: "https://leetcode.com/adityamishra0912" },
+    { label: "Email", href: "https://mail.google.com/mail/?view=cm&fs=1&to=aditya.mishra0989@gmail.com" },
 ];
 
 export default function Navbar() {
@@ -21,7 +24,9 @@ export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
     const [hovered, setHovered] = useState(false);
     const [cursor, setCursor] = useState({ x: 0, y: 0 });
-
+    const navLinkRefs = useRef<(HTMLAnchorElement | null)[]>([]);
+    const navTextRefs = useRef<(HTMLSpanElement | null)[]>([]);
+    const navUnderlineRefs = useRef<(HTMLSpanElement | null)[]>([]);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -45,7 +50,6 @@ export default function Navbar() {
         };
     }, []);
 
-
     useEffect(() => {
         if (!isOpen) return;
 
@@ -64,21 +68,117 @@ export default function Navbar() {
         };
     }, [isOpen]);
 
+    // Navigation and social links hover animation
+    useEffect(() => {
+        const links = navLinkRefs.current;
+        const texts = navTextRefs.current;
+        const underlines = navUnderlineRefs.current;
 
-    const handleMouseMove = (
-        event: React.MouseEvent<HTMLButtonElement>
-    ) => {
-        const rect = event.currentTarget.getBoundingClientRect();
+        const cleanups: (() => void)[] = [];
 
-        const x = (event.clientX - rect.left) / rect.width - 0.5;
-        const y = (event.clientY - rect.top) / rect.height - 0.5;
+        links.forEach((link, index) => {
+            const text = texts[index];
+            const underline = underlines[index];
 
-        setCursor({
-            x: x * 8,
-            y: y * 8,
+            if (!link || !text || !underline) return;
+
+            // Cursor-following movement.
+            const moveTextX = gsap.quickTo(text, "x", {
+                duration: 0.3,
+                ease: "power3.out",
+            });
+
+            const moveTextY = gsap.quickTo(text, "y", {
+                duration: 0.3,
+                ease: "power3.out",
+            });
+
+            const moveUnderlineX = gsap.quickTo(underline, "x", {
+                duration: 0.45,
+                ease: "power3.out",
+            });
+
+            const moveUnderlineY = gsap.quickTo(underline, "y", {
+                duration: 0.45,
+                ease: "power3.out",
+            });
+
+            const handleMouseMove = (event: MouseEvent) => {
+                const bounds = link.getBoundingClientRect();
+
+                const relativeX = gsap.utils.clamp(
+                    -1,
+                    1,
+                    (event.clientX - (bounds.left + bounds.width / 2)) /
+                    (bounds.width / 2)
+                );
+
+                const relativeY = gsap.utils.clamp(
+                    -1,
+                    1,
+                    (event.clientY - (bounds.top + bounds.height / 2)) /
+                    (bounds.height / 2)
+                );
+
+                moveTextX(relativeX * 10);
+                moveTextY(relativeY * 7);
+
+                moveUnderlineX(relativeX * 3);
+                moveUnderlineY(relativeY * 2);
+            };
+
+            const handleMouseEnter = () => {
+                gsap.to(text, {
+                    scale: 1.08,
+                    duration: 0.3,
+                    ease: "power3.out",
+                    overwrite: "auto",
+                });
+
+                gsap.to(underline, {
+                    scaleX: 1,
+                    duration: 0.4,
+                    ease: "power3.out",
+                    overwrite: "auto",
+                });
+            };
+
+            const handleMouseLeave = () => {
+                moveTextX(0);
+                moveTextY(0);
+                moveUnderlineX(0);
+                moveUnderlineY(0);
+
+                gsap.to(text, {
+                    scale: 1,
+                    duration: 0.4,
+                    ease: "power3.out",
+                    overwrite: "auto",
+                });
+
+                gsap.to(underline, {
+                    scaleX: 0,
+                    duration: 0.35,
+                    ease: "power3.inOut",
+                    overwrite: "auto",
+                });
+            };
+
+            link.addEventListener("mousemove", handleMouseMove);
+            link.addEventListener("mouseenter", handleMouseEnter);
+            link.addEventListener("mouseleave", handleMouseLeave);
+
+            cleanups.push(() => {
+                link.removeEventListener("mousemove", handleMouseMove);
+                link.removeEventListener("mouseenter", handleMouseEnter);
+                link.removeEventListener("mouseleave", handleMouseLeave);
+
+                gsap.killTweensOf([text, underline]);
+            });
         });
-    };
 
+        return () => cleanups.forEach((cleanup) => cleanup());
+    }, []);
 
     return (
         <>
@@ -152,8 +252,8 @@ export default function Navbar() {
                         {/* Middle line */}
                         <span
                             className={`absolute h-[2px] w-full rounded-full bg-white transition-all duration-200 ${isOpen
-                                    ? "scale-x-0 opacity-0"
-                                    : "scale-x-100 opacity-100"
+                                ? "scale-x-0 opacity-0"
+                                : "scale-x-100 opacity-100"
                                 }`}
                         />
 
@@ -195,19 +295,34 @@ export default function Navbar() {
                     {navLinks.map((link, index) => (
                         <a
                             key={link.label}
+                            ref={(element) => {
+                                navLinkRefs.current[index] = element;
+                            }}
                             href={link.href}
                             tabIndex={isOpen ? 0 : -1}
                             onClick={() => setIsOpen(false)}
                             style={{
                                 transitionDelay: isOpen ? `${index * 60}ms` : "0ms",
                             }}
-                            className="group flex items-center gap-3 py-1 text-[clamp(2rem,6vw,2.7rem)] leading-[1.25] tracking-[-0.055em] transition-colors duration-300 hover:text-cyan-300"
+                            className="relative group flex items-center gap-3 py-1 text-[clamp(2rem,6vw,2.7rem)] leading-[1.25] tracking-[-0.055em] transition-colors duration-300 hover:text-cyan-300"
                         >
-                            <span className="text-cyan-300 opacity-0 transition-opacity group-hover:opacity-100">
-                                ·
-                            </span>
-                            <span className="transition-transform duration-300 group-hover:translate-x-2">
-                                {link.label}
+                            <span className="relative z-10 inline-block">
+                                <span
+                                    ref={(element) => {
+                                        navTextRefs.current[index] = element;
+                                    }}
+                                    className="inline-block origin-center whitespace-nowrap"
+                                >
+                                    {link.label}
+                                </span>
+
+                                <span
+                                    ref={(element) => {
+                                        navUnderlineRefs.current[index] = element;
+                                    }}
+                                    aria-hidden="true"
+                                    className="absolute bottom-0 left-0 h-px w-full origin-left scale-x-0 bg-current"
+                                />
                             </span>
                         </a>
                     ))}
@@ -219,9 +334,12 @@ export default function Navbar() {
                     </p>
 
                     <div className="flex flex-wrap gap-5">
-                        {socialLinks.map((social) => (
+                        {socialLinks.map((social, index) => (
                             <a
                                 key={social.label}
+                                ref={(element) => {
+                                    navLinkRefs.current[index + navLinks.length] = element;
+                                }}
                                 href={social.href}
                                 target={social.label === "Email" ? undefined : "_blank"}
                                 rel={
@@ -230,9 +348,24 @@ export default function Navbar() {
                                         : "noopener noreferrer"
                                 }
                                 tabIndex={isOpen ? 0 : -1}
-                                className="text-[10px] text-white/75 transition-colors hover:text-cyan-300"
+                                className="relative flex justify-center py-2 text-[10px] text-white/75 transition-colors hover:text-cyan-300"
                             >
-                                {social.label}
+                                <span
+                                    ref={(element) => {
+                                        navTextRefs.current[index + navLinks.length] = element;
+                                    }}
+                                    className="relative z-10 inline-block origin-center whitespace-nowrap"
+                                >
+                                    {social.label}
+                                </span>
+
+                                <span
+                                    ref={(element) => {
+                                        navUnderlineRefs.current[index + navLinks.length] = element;
+                                    }}
+                                    aria-hidden="true"
+                                    className="absolute bottom-1 left-0 h-px w-full origin-center scale-x-0 bg-current"
+                                />
                             </a>
                         ))}
                     </div>
