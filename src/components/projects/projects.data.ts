@@ -5,45 +5,57 @@ export interface Project {
     tags: string[];
     description: string;
     screenshot?: string;
-    github: string;
+    github?: string;
     live?: string;
     gradient: string;
 }
 
-export const projects: Project[] = [
+const projects: Project[] = [
     {
-        slug: "marketpulse",
-        title: "MarketPulse",
-        category: "Data Engineering & Development",
-        tags: ["DATA ENGINEERING", "ANALYTICS"],
+        slug: "apexcode",
+        title: "ApexCode",
+        category: "Full Stack Development & Systems Engineering",
+        tags: ["NEXT.JS", "SPRING BOOT", "CODE EXECUTION", "DOCKER"],
         description:
-            "A market intelligence platform for turning raw data into actionable insights.",
-        screenshot: "/projects/marketpulse.png",
-        github: "https://github.com/your-username/marketpulse",
-        live: "",
-        gradient: "linear-gradient(135deg, #07152f, #2459dc)",
+            "An online coding assessment platform featuring problem management, multi-language code execution, automated test cases, and an isolated judging environment.",
+        screenshot: "/projects/apexcode.png",
+        github: "https://github.com/binarybrain-7/Online-Assessment-Coding-Platform",
+        live: "https://prognexus-eight.vercel.app/",
+        gradient: "linear-gradient(135deg, #111827 0%, #4338ca 100%)",
     },
     {
-        slug: "plantix",
-        title: "Plantix",
-        category: "Deep Learning & Computer Vision",
-        tags: ["DEEP LEARNING", "COMPUTER VISION"],
+        slug: "risknexus",
+        title: "RiskNexus",
+        category: "Cybersecurity & Artificial Intelligence",
+        tags: ["CYBERSECURITY", "MACHINE LEARNING", "RISK QUANTIFICATION", "OPTIMIZATION"],
         description:
-            "An intelligent plant analysis system powered by computer vision.",
-        screenshot: "/projects/plantix.png",
-        github: "https://github.com/your-username/plantix",
-        live: "",
-        gradient: "linear-gradient(135deg, #003b27, #16844b)",
+            "An AI-powered cyber risk quantification platform that evaluates organizational security risks, estimates potential financial losses, and optimizes cybersecurity investment decisions.",
+        screenshot: "/projects/risknexus.png",
+        github: "https://github.com/RajMaurya-07/Cyber_Risk_Quantification",
+        live: "https://risknexus.vercel.app",
+        gradient: "linear-gradient(135deg, #30120c 0%, #c2410c 100%)",
     },
     {
-        slug: "intellicast",
-        title: "IntelliCast",
-        category: "NLP, LLM & RAG",
-        tags: ["NLP", "LLM", "RAG"],
+        slug: "tcap",
+        title: "TCAP",
+        category: "Full Stack Development & Platform Engineering",
+        tags: ["NEXT.JS", "TYPESCRIPT", "FIREBASE", "CLOUDINARY"],
         description:
-            "An AI-powered application built around language models and retrieval.",
-        github: "https://github.com/your-username/intellicast",
-        live: "",
-        gradient: "linear-gradient(135deg, #21103f, #763bd5)",
+            "A campus ambassador management platform featuring role-based dashboards, student onboarding, referral tracking, task submissions, points management, leaderboards, and notifications.",
+        screenshot: "/projects/tcap.png",
+        live: "https://trendyoncampus.com",
+        gradient: "linear-gradient(135deg, #172554 0%, #2563eb 100%)",
+    },
+    {
+        slug: "guardianai",
+        title: "GuardianAI",
+        category: "Artificial Intelligence & Intelligent Systems",
+        tags: ["AI", "MACHINE LEARNING", "INTELLIGENT AUTOMATION"],
+        description:
+            "An intelligent AI-powered system designed to assist with monitoring, threat detection, and proactive decision-making.",
+        screenshot: "/projects/guardian-ai.png",
+        github: "https://github.com/adityamishra912/GuardianAI",
+        live: "https://guardian-ai-navy.vercel.app/",
+        gradient: "linear-gradient(135deg, #052e2b 0%, #0d9488 100%)",
     },
 ];
